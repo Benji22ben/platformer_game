@@ -5,11 +5,14 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
+    private BoxCollider2D boxCollider;
     private Animator anim;
     private SpriteRenderer sprite;
 
-    private enum MovementState { idle, running, jumping }
-    private MovementState state = MovementState.idle;
+    [SerializeField] private LayerMask groundLayerMask;
+    
+    private enum MovementState { Idle, Running, Jumping }
+    private MovementState state = MovementState.Idle;
     
     [SerializeField] public float jumpForce = 5f;
     [SerializeField] public float speed = 10;
@@ -22,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
@@ -29,8 +33,9 @@ public class PlayerMovement : MonoBehaviour
     {
         _dirX = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(_dirX * speed, rb.velocity.y);
-        
-        if (Input.GetButtonDown("Jump")) {
+
+        if (Input.GetButtonDown("Jump") && IsGrounded())
+        {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
@@ -39,35 +44,42 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateAnimationState()
     {
-        MovementState state;
+        MovementState state = isJumping ? MovementState.Jumping : MovementState.Idle;
         
-        
-        if (_dirX > 0f && !isJumping)
+        if (_dirX > 0f)
         {
-            state = MovementState.running;
-            sprite.flipX = false;
+            if (IsGrounded())
+            {
+                state = MovementState.Running;
+            }
+            transform.localScale= new Vector3(1, 1, 1);
         }
-        else if (_dirX < 0f && !isJumping)
+        else if (_dirX < 0f)
         {
-            state = MovementState.running;
-            sprite.flipX = true;
-        }
-        else 
-        {
-            state = MovementState.idle;
-        }
+            if (IsGrounded())
+            {
+                state = MovementState.Running;
+            }
+            transform.localScale= new Vector3(-1, 1, 1);
+        } 
         
         if (rb.velocity.y > .1f)
         {
-            state = MovementState.jumping;
+            state = MovementState.Jumping;
             isJumping = true;
         }
-        else if (rb.velocity.y < -.1f || rb.velocity.y == 0f && isJumping)
+        else if (rb.velocity.y < -.1f)
         {
-            state = MovementState.jumping;
+            state = MovementState.Jumping;
             isJumping = false;
         }
         
         anim.SetInteger("state", (int) state);
+    }
+    
+    private bool IsGrounded()
+    {
+        return Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, Vector2.down, .1f,
+            groundLayerMask);
     }
 }
