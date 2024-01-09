@@ -8,8 +8,10 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider;
     private Animator anim;
     private SpriteRenderer sprite;
+    private bool inWater = false;
 
     [SerializeField] private LayerMask groundLayerMask;
+    [SerializeField] private BoxCollider2D waterCollider;
     
     private enum MovementState { Idle, Running, Jumping }
     private MovementState state = MovementState.Idle;
@@ -17,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public float jumpForce = 5f;
     [SerializeField] public float speed = 10;
     private float _dirX = 0f;
-    private bool isJumping = false;
+    private bool _isJumping = false;
     
     // Start is called before the first frame update
     void Start()
@@ -32,19 +34,27 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         _dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(_dirX * speed, rb.velocity.y);
+        Vector2 velocity = rb.velocity;
+        velocity = new Vector2(_dirX * speed, velocity.y);
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            velocity = new Vector2(velocity.x, jumpForce);
         }
 
+        if (inWater)
+        {
+            velocity = new Vector2(velocity.x * 0.8f, velocity.y * 0.8f);
+        }
+        
+        rb.velocity = velocity;
+        
         UpdateAnimationState();
     }
 
     private void UpdateAnimationState()
     {
-        MovementState state = isJumping ? MovementState.Jumping : MovementState.Idle;
+        MovementState state = _isJumping ? MovementState.Jumping : MovementState.Idle;
         
         if (_dirX > 0f)
         {
@@ -66,12 +76,12 @@ public class PlayerMovement : MonoBehaviour
         if (rb.velocity.y > .1f)
         {
             state = MovementState.Jumping;
-            isJumping = true;
+            _isJumping = true;
         }
         else if (rb.velocity.y < -.1f)
         {
             state = MovementState.Jumping;
-            isJumping = false;
+            _isJumping = false;
         }
         
         anim.SetInteger("state", (int) state);
@@ -81,5 +91,13 @@ public class PlayerMovement : MonoBehaviour
     {
         return Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, Vector2.down, .1f,
             groundLayerMask);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Water"))
+        {
+            inWater = true;
+        }
     }
 }
