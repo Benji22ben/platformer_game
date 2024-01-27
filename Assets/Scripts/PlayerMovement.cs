@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (inWater)
         {
-            velocity = new Vector2(velocity.x * 0.8f, velocity.y * 0.8f);
+            velocity = new Vector2(velocity.x * 0.95f, velocity.y * 0.95f);
         }
         
         rb.velocity = velocity;
