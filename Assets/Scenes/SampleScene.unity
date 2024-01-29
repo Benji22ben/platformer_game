@@ -1231,7 +1231,7 @@ Transform:
   m_GameObject: {fileID: 1236517517}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -33.903976, z: 8.710278}
+  m_LocalPosition: {x: 0, y: -33.903976, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1481,6 +1481,7 @@ MonoBehaviour:
   - {fileID: 500617987}
   speed: 2
   rotationSpeed: 2
+  flipSprite: 0
 --- !u!1 &1574211596
 GameObject:
   m_ObjectHideFlags: 0
