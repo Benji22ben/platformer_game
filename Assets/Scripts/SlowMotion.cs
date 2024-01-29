@@ -8,10 +8,11 @@ public class SlowMotion : MonoBehaviour
 
     private float startTimescale;
     private float startFixedDeltaTime;
-    private float slowMotionPower = 100f;
+    [SerializeField] [Range(0, 1000)] private float slowMotionPower = 100f;
 
-    private float slowMotionTimer; 
-    
+    [SerializeField] [Range(0, 100)] private float slowMotionPowerUseRatePerSecond = 10f;
+    [SerializeField] [Range(0, 100)] private float regenerationRatePerSecond = 10f;
+
     private bool isCtrlPressed = false;
 
     void Start()
@@ -24,19 +25,19 @@ public class SlowMotion : MonoBehaviour
     {
         isCtrlPressed = Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl);
 
-        if(slowMotionPower >= 1)
+        if(slowMotionPower <= 0 && isCtrlPressed)
         {
-            if(isCtrlPressed)
-            {
-                StartSlowMotion();
-                slowMotionTimer += Time.deltaTime;
-            } else 
-            {
-                StopSlowMotion();
-            }
-        } 
-        else {
             StopSlowMotion();
+            return;
+        }
+        if(isCtrlPressed)
+        {
+            StartSlowMotion();
+            ConsumeSlowMotionPower();
+        } else 
+        {
+            StopSlowMotion();
+            RegeneratePower();
         }
 
         Debug.Log(slowMotionPower);
@@ -56,20 +57,13 @@ public class SlowMotion : MonoBehaviour
 
     private void ConsumeSlowMotionPower()
     {
-        if (isCtrlPressed)
-        {
-            slowMotionPower -= slowMotionPowerUseRate;
-            slowMotionPower = Mathf.Max(slowMotionPower, 0);
-        }
+        slowMotionPower -= slowMotionPowerUseRatePerSecond * startFixedDeltaTime;
+        slowMotionPower = Mathf.Max(slowMotionPower, 0);
     }
 
     private void RegeneratePower()
     {
-        if (!isCtrlPressed)
-        {
-        slowMotionPower += regenerationRate;
-        
+        slowMotionPower += regenerationRatePerSecond * startFixedDeltaTime;
         slowMotionPower = Mathf.Min(slowMotionPower, 100);
-        }
     }
 }
