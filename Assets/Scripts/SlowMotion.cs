@@ -9,11 +9,8 @@ public class SlowMotion : MonoBehaviour
     private float startTimescale;
     private float startFixedDeltaTime;
     private float slowMotionPower = 100f;
-    private float regenerationInterval = 1f;
-    private float regenerationRate = 10f;
 
-    private float slowMotionPowerUseRate = 10f;
-    private float slowMotionPowerUseInterval = 0.1f;
+    private float slowMotionTimer; 
     
     private bool isCtrlPressed = false;
 
@@ -21,9 +18,6 @@ public class SlowMotion : MonoBehaviour
     {
         startTimescale = Time.timeScale;
         startFixedDeltaTime = Time.fixedDeltaTime;
-
-        StartCoroutine(ConsumeSlowMotionPower());
-        StartCoroutine(RegeneratePower());
     }
 
     void Update()
@@ -35,6 +29,7 @@ public class SlowMotion : MonoBehaviour
             if(isCtrlPressed)
             {
                 StartSlowMotion();
+                slowMotionTimer += Time.deltaTime;
             } else 
             {
                 StopSlowMotion();
@@ -59,36 +54,22 @@ public class SlowMotion : MonoBehaviour
         Time.fixedDeltaTime = startFixedDeltaTime;
     }
 
-    private IEnumerator ConsumeSlowMotionPower()
+    private void ConsumeSlowMotionPower()
     {
-        while (true)
+        if (isCtrlPressed)
         {
-            if (isCtrlPressed)
-            {
-                slowMotionPower -= slowMotionPowerUseRate;
-                slowMotionPower = Mathf.Max(slowMotionPower, 0);
-
-                yield return new WaitForSeconds(slowMotionPowerUseInterval);
-            }
-            else
-            {
-                yield return null;
-            }
+            slowMotionPower -= slowMotionPowerUseRate;
+            slowMotionPower = Mathf.Max(slowMotionPower, 0);
         }
     }
 
-    private IEnumerator RegeneratePower()
+    private void RegeneratePower()
     {
-        while (true)
+        if (!isCtrlPressed)
         {
-            if (!isCtrlPressed)
-            {
-            slowMotionPower += regenerationRate;
-            
-            slowMotionPower = Mathf.Min(slowMotionPower, 100);
-
-            yield return new WaitForSeconds(regenerationInterval);
-            }
+        slowMotionPower += regenerationRate;
+        
+        slowMotionPower = Mathf.Min(slowMotionPower, 100);
         }
     }
 }
