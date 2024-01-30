@@ -8,7 +8,6 @@ public class GameDeath : MonoBehaviour
     private Rigidbody2D rb;
     private SlowMotion slowMotion;
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -19,7 +18,10 @@ public class GameDeath : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("GameOver"))
         {
-            Die();
+            if (GlobalVariables.isGameStarted)
+            {
+                Die();
+            }
         }
     }
 

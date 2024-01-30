@@ -27,6 +27,10 @@ public class SlowMotion : MonoBehaviour
 
     void Update()
     {
+        if (!GlobalVariables.isGameStarted)
+        {
+            return;
+        }
         isCtrlPressed = Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl);
     }
 

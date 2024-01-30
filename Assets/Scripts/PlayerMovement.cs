@@ -33,6 +33,13 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GlobalVariables.isGameStarted)
+        {
+            Move();
+        }
+    }
+
+    private void Move() {
         _dirX = Input.GetAxisRaw("Horizontal");
         Vector2 velocity = rb.velocity;
         velocity = new Vector2(_dirX * speed, velocity.y);

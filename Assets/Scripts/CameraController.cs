@@ -6,16 +6,10 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Vector3 cameraOffset = new Vector3(0, 0, -10);
-    private GameStart gameStart;
     
-    void Start()
-    {
-        gameStart = GetComponent<GameStart>();
-    }
-
     void Update()
     {
-        if (gameStart.isGameStarted)
+        if (GlobalVariables.isGameStarted)
         {
             FollowPlayer();
         }
