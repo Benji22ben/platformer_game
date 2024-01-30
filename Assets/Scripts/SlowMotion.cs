@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,8 +11,8 @@ public class SlowMotion : MonoBehaviour
     private float startFixedDeltaTime;
     [SerializeField] [Range(0, 1000)] private float slowMotionPower = 100f;
 
-    [SerializeField] [Range(0, 100)] private float slowMotionPowerUseRatePerSecond = 10f;
-    [SerializeField] [Range(0, 100)] private float regenerationRatePerSecond = 10f;
+    [SerializeField] [Range(0, 500)] private float slowMotionPowerUseRatePerSecond = 10f;
+    [SerializeField] [Range(0, 500)] private float regenerationRatePerSecond = 10f;
 
     private bool isCtrlPressed = false;
 
@@ -21,10 +22,13 @@ public class SlowMotion : MonoBehaviour
         startFixedDeltaTime = Time.fixedDeltaTime;
     }
 
-    void Update()
+    private void Update()
     {
         isCtrlPressed = Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl);
+    }
 
+    void FixedUpdate()
+    {
         if(slowMotionPower <= 0 && isCtrlPressed)
         {
             StopSlowMotion();
