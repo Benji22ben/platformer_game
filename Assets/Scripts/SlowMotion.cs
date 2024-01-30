@@ -9,7 +9,8 @@ public class SlowMotion : MonoBehaviour
 
     private float startTimescale;
     private float startFixedDeltaTime;
-    [SerializeField] [Range(0, 1000)] private float slowMotionPower = 100f;
+    [SerializeField] [Range(0, 1000)] private float slowMotionPowerBaseValue = 100f;
+    private float slowMotionPower;
 
     [SerializeField] [Range(0, 500)] private float slowMotionPowerUseRatePerSecond = 10f;
     [SerializeField] [Range(0, 500)] private float regenerationRatePerSecond = 10f;
@@ -18,11 +19,13 @@ public class SlowMotion : MonoBehaviour
 
     void Start()
     {
+        slowMotionPower = slowMotionPowerBaseValue;
+
         startTimescale = Time.timeScale;
         startFixedDeltaTime = Time.fixedDeltaTime;
     }
 
-    private void Update()
+    void Update()
     {
         isCtrlPressed = Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.LeftControl);
     }
@@ -69,5 +72,17 @@ public class SlowMotion : MonoBehaviour
     {
         slowMotionPower += regenerationRatePerSecond * startFixedDeltaTime;
         slowMotionPower = Mathf.Min(slowMotionPower, 100);
+    }
+
+    private void ResetPower()
+    {
+        slowMotionPower = slowMotionPowerBaseValue;
+    }
+
+    public void StopSlowMotionAndResetPower()
+    {
+        isCtrlPressed = false;
+        StopSlowMotion();
+        ResetPower();
     }
 }

@@ -13,24 +13,22 @@ public class WaypointFollower : MonoBehaviour
     
     void Update()
     {
+        if (!flipSprite)
+        {
+            flipSprite = true;
+            transform.localScale = new Vector3(-(transform.localScale[0]), transform.localScale[1], transform.localScale[2]);
+        }
+        
         if(Vector2.Distance(waypoints[currentWaypointIndex].transform.position, transform.position) < 0.1f)
         {
             currentWaypointIndex++;
-            flipSprite = !flipSprite;
+            flipSprite = false;
             if(currentWaypointIndex >= waypoints.Length)
             {
                 currentWaypointIndex = 0;
             }
         }
-        if (flipSprite)
-        {
-            transform.localScale = new Vector3(-1, 1, 1);
-        }
-        else
-        {
-            transform.localScale = new Vector3(1, 1, 1);
-        }
-        
+
         transform.position = Vector2.MoveTowards(transform.position, waypoints[currentWaypointIndex].transform.position, speed * Time.deltaTime);
     }
 }
