@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GlobalVariables.isGameStarted)
+        if (Convert.ToBoolean(PlayerPrefs.GetInt("isGameStarted")))
         {
             Move();
         }

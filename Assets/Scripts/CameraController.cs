@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CameraController : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class CameraController : MonoBehaviour
     
     void Update()
     {
-        if (GlobalVariables.isGameStarted)
+        if (Convert.ToBoolean(PlayerPrefs.GetInt("isGameStarted")))
         {
             FollowPlayer();
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SlowMotion : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class SlowMotion : MonoBehaviour
 
     void Update()
     {
-        if (!GlobalVariables.isGameStarted)
+        if (!Convert.ToBoolean(PlayerPrefs.GetInt("isGameStarted")))
         {
             return;
         }

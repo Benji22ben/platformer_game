@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GameStart : MonoBehaviour
 {
@@ -15,7 +16,12 @@ public class GameStart : MonoBehaviour
     void Start() {
         differenceBetweenXAndY = maxY - minY; // Difference between the X and Y position of the camera
         differenceBetweenXAndY = differenceBetweenXAndY < 0 ? -differenceBetweenXAndY : differenceBetweenXAndY; // Make sure the difference is positive
+        if(Convert.ToBoolean(PlayerPrefs.GetInt("isGameStarted")))
+        {
+            return;
+        }
         StartCoroutine(MoveCamera());
+
     }
 
     private IEnumerator MoveCamera()
@@ -34,7 +40,7 @@ public class GameStart : MonoBehaviour
         }
 
         yield return new WaitForSeconds(3f);
-        GlobalVariables.isGameStarted = true;
+        PlayerPrefs.SetInt("isGameStarted", Convert.ToInt32(true));
     }
 }
 

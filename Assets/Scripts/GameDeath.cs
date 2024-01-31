@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GameDeath : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class GameDeath : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("GameOver"))
         {
-            if (GlobalVariables.isGameStarted)
+            if (Convert.ToBoolean(PlayerPrefs.GetInt("isGameStarted")))
             {
                 Die();
             }
